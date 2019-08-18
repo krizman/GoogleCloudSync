@@ -13,13 +13,16 @@ namespace GoogleCloudSync
     {
         private readonly FileSystemWatcher fileSystemWatcher;
         // TODO: add to config or something
-        private const string bucketName = "login5-agro-files-source-1566127485";
+        private readonly string bucketName;
 
         public CloudManager(
+            string bucketName,
             string pathToWatch, 
             string fileFilter = null, 
             bool includeSubdirectories = false)
         {
+            this.bucketName = bucketName;
+
             fileFilter = string.IsNullOrWhiteSpace(fileFilter) ? "*.*" : fileFilter;
 
             fileSystemWatcher = new FileSystemWatcher(pathToWatch, fileFilter);
@@ -32,7 +35,10 @@ namespace GoogleCloudSync
                 | NotifyFilters.LastWrite;
 
             fileSystemWatcher.Created += FileSystemWatcher_Created;
+        }
 
+        public void StartWatchingFiles()
+        {
             fileSystemWatcher.EnableRaisingEvents = true;
         }
 
